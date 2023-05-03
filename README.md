@@ -1,4 +1,4 @@
-# kafka local stack
+# kafka local stack in kubernetes
 
 Sandbox for playing around with Kafka and Confluent tools
 
