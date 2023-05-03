@@ -15,7 +15,6 @@
 # # start containers
 docker-compose up -d
 
-docker-compose down
 
 # produce a stream of data (little dragon lyric lines) to kafka via a http service
 ./create_readings.sh
@@ -24,3 +23,5 @@ docker-compose down
 # ```
 # # watch kafka connect consume the topic and write to a sink (a local file)
 tail -f readings/data.txt
+
+docker-compose down
