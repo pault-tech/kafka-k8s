@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert -f docker-compose.yml
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: basic-stream-processor
+  name: basic-stream-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: basic-stream-processor
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert -f docker-compose.yml
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: basic-stream-processor
+    spec:
+      containers:
+        - env:
+            - name: KAFKA_HOST
+              value: kafka
+            - name: KAFKA_PORT
+              value: "9092"
+          image: lombardo/basic_stream_processor:latest
+          name: basic-stream-processor
+          resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert -f docker-compose.yml
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: kafka-cli
+  name: kafka-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: kafka-cli
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert -f docker-compose.yml
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kafka-cli
+    spec:
+      containers:
+        - args:
+            - tail
+            - -f
+            - /var/log/bootstrap.log
+            - '>'
+            - /dev/null
+            - 2>&1
+          image: taion809/kafka-cli
+          name: kafka-cli
+          resources: {}
+          workingDir: /opt/kafka/bin
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert -f docker-compose.yml
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: kafka-connect
+  name: kafka-connect
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: kafka-connect
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert -f docker-compose.yml
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kafka-connect
+    spec:
+      containers:
+        - env:
+            - name: CONNECT_BOOTSTRAP_SERVERS
+              value: kafka:9092
+            - name: CONNECT_CONFIG_STORAGE_TOPIC
+              value: readings-config
+            - name: CONNECT_GROUP_ID
+              value: readings-connect
+            - name: CONNECT_INTERNAL_KEY_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_INTERNAL_VALUE_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_KEY_CONVERTER
+              value: org.apache.kafka.connect.storage.StringConverter
+            - name: CONNECT_OFFSET_STORAGE_TOPIC
+              value: readings-offset
+            - name: CONNECT_REST_ADVERTISED_HOST_NAME
+              value: kafka_connect
+            - name: CONNECT_REST_PORT
+              value: "8083"
+            - name: CONNECT_STATUS_STORAGE_TOPIC
+              value: readings-status
+            - name: CONNECT_VALUE_CONVERTER
+              value: org.apache.kafka.connect.storage.StringConverter
+          image: confluentinc/cp-kafka-connect:3.2.1
+          name: kafka-connect
+          ports:
+            - containerPort: 8083
+          resources: {}
+          volumeMounts:
+            - mountPath: /tmp/readings
+              name: kafka-connect-claim0
+      restartPolicy: Always
+      volumes:
+        - name: kafka-connect-claim0
+          persistentVolumeClaim:
+            claimName: kafka-connect-claim0
+status: {}
